@@ -4,12 +4,14 @@ import Persons from './components/Persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import personsService from './services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [filter, setFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect (() => {    
     personsService
@@ -24,6 +26,13 @@ const App = () => {
     setNewPhone('')
   }
 
+  const throwMessage = (message) => {
+    setErrorMessage(message)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 3000)
+  }
+
   const addPerson = (event) => {
     event.preventDefault()
     const personObject = { name: newName, number: newPhone }
@@ -32,21 +41,29 @@ const App = () => {
       if (persons.map(person => person.number).includes(personObject.number)) {
         return alert(`${personObject.name} is already added to phonebook`)
       } else {
-        if (window.confirm("Do you want to update this person's number?")) {
+        if (window.confirm(`Do you want to update ${personObject.name}'s number?`)) {
           const existingPerson = persons.find(person => person.name === personObject.name)
           personsService
             .update(existingPerson.id, personObject)
             .then(updatedPerson => {
               setPersons(persons.map(p => p.id === updatedPerson.id ? updatedPerson : p))
               clearInputs()
+              throwMessage(`${updatedPerson.name} number updated to: ${updatedPerson.number}`)
+            })
+            .catch(error => {
+              throwMessage(`${personObject.name} has been deleted from the server`)
+              setPersons(persons.filter(person => person.name !== personObject.name))
             })
         }
       }
     } else {
       personsService
         .create(personObject)
-        .then(returnedPerson => setPersons(persons.concat(returnedPerson)))
-      clearInputs()
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          throwMessage(`${returnedPerson.name} added to the DB`)
+          clearInputs()
+        })
     }
   }
 
@@ -60,6 +77,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification message={errorMessage} />
 
       <Filter onChange={setFilter} />
 

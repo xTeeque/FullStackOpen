@@ -1,14 +1,19 @@
 {
   "persons": [
     {
-      "name": "A",
-      "number": "678",
-      "id": "pNftQMc3_7Y"
+      "name": "hws",
+      "number": "680",
+      "id": "zM_ysRAW4Ng"
     },
     {
-      "name": "Aa",
-      "number": "20",
-      "id": "6YT9AF-Vyh8"
+      "name": "83r0ru",
+      "number": "whoiw",
+      "id": "4OfGz7gNp5U"
+    },
+    {
+      "name": "Asaf Arusi",
+      "number": "967854",
+      "id": "BA5lJhXkuXU"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

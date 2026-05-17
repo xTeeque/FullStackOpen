@@ -1,0 +1,10 @@
+DELETE http://localhost:3001/api/persons/4
+
+###
+POST http://localhost:3001/api/persons/
+content-type: application/json
+
+{
+  "name": "Asaf Arusi",
+  "number": "053-339-5180"
+}
